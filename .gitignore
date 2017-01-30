@@ -1,0 +1,18 @@
+SANDBOX .gitignore
+------------------
+.idea/
+build/
+out/
+logs/
+dist/
+target/
+build.properties
+context.xml
+*.iml
+*.class
+*.DS_Store
+
+!PROJECT-SETUP/IDEA/**
+!PROJECT-SETUP/IDEA/**/*
+!PROJECT-SETUP/IDEA/**/**/META-INF/*
+

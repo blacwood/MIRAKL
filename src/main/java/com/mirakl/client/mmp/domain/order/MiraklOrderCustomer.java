@@ -1,0 +1,34 @@
+/**
+ * Copyright © 2016 Mirakl. www.mirakl.com - info@mirakl.com
+ * All Rights Reserved. Tous droits réservés.
+ * Strictly Confidential, this data may not be reproduced or redistributed
+ * Use of this data is pursuant to a license agreement with Mirakl.
+ */
+package com.mirakl.client.mmp.domain.order;
+
+import com.mirakl.client.domain.common.Unicity;
+
+@Unicity(props = "id")
+public class MiraklOrderCustomer extends AbstractMiraklOrderCustomer {
+
+    private String email;
+
+    private MiraklCustomerShippingAddress shippingAddress;
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public MiraklCustomerShippingAddress getShippingAddress() {
+        return shippingAddress;
+    }
+
+    public void setShippingAddress(MiraklCustomerShippingAddress shippingAddress) {
+        this.shippingAddress = shippingAddress;
+    }
+}
+
