@@ -6,16 +6,26 @@ import com.bigname.core.restful.client.exception.ApiException;
 import com.bigname.core.restful.client.filter.AuthorizationRequestFilter;
 import com.bigname.core.restful.client.filter.DefaultAcceptRequestFilter;
 import com.bigname.core.restful.client.mapper.ObjectMapperProvider;
+import com.bigname.core.restful.client.request.AbstractApiRequestWithFile;
 import com.bigname.core.restful.client.request.ApiRequest;
 import com.bigname.core.restful.client.security.Credential;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.jackson.JacksonFeature;
+import org.glassfish.jersey.media.multipart.BodyPart;
+import org.glassfish.jersey.media.multipart.FormDataMultiPart;
+import org.glassfish.jersey.media.multipart.MultiPart;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
+import org.glassfish.jersey.media.multipart.file.FileDataBodyPart;
+import org.glassfish.jersey.media.multipart.file.StreamDataBodyPart;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.*;
 import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.io.File;
+import java.io.InputStream;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -29,6 +39,8 @@ public class AbstractApiClient {
     private static final int DEFAULT_CONNECT_TIMEOUT_MILLISECONDS = 30000;
     // Default connect timeout in 60 seconds
     private static final int DEFAULT_READ_TIMEOUT_MILLISECONDS = 60000;
+
+    private static final String MULTIPART_FILENAME_PARAM_NAME = "file";
 
     private String endpoint;
     private Client client;
@@ -72,12 +84,52 @@ public class AbstractApiClient {
         clientConfig.property(ClientProperties.READ_TIMEOUT, DEFAULT_READ_TIMEOUT_MILLISECONDS);
     }
 
+    protected File getFile(ApiRequest request) {
+        return get(request, File.class);
+    }
+
     protected <E> E get(ApiRequest request, Class<E> returnType) {
         try {
             return getRequest(request).get(returnType);
         } catch (WebApplicationException e) {
-            ErrorResponse errorResponseBean = ErrorResponseParser.parseErrorFromResponse(e.getResponse());
-            throw new ApiException(errorResponseBean, e);
+            ErrorResponse errorResponse = ErrorResponseParser.parseErrorFromResponse(e.getResponse());
+            throw new ApiException(errorResponse, e);
+        }
+    }
+
+    protected Response post(ApiRequest request, Entity entity) {
+        try {
+            return getRequest(request).post(entity);
+        } catch (WebApplicationException e) {
+            ErrorResponse errorResponse = ErrorResponseParser.parseErrorFromResponse(e.getResponse());
+            throw new ApiException(errorResponse, e);
+        }
+    }
+
+    protected <E> E post(ApiRequest request, Entity<?> entity, Class<E> returnType) {
+        try {
+            return getRequest(request).post(entity, returnType);
+        } catch (WebApplicationException e) {
+            ErrorResponse errorResponse = ErrorResponseParser.parseErrorFromResponse(e.getResponse());
+            throw new ApiException(errorResponse, e);
+        }
+    }
+
+    protected Response put(ApiRequest request, Entity entity) {
+        try {
+            return getRequest(request).put(entity);
+        } catch (WebApplicationException e) {
+            ErrorResponse errorResponse = ErrorResponseParser.parseErrorFromResponse(e.getResponse());
+            throw new ApiException(errorResponse, e);
+        }
+    }
+
+    protected <E> E put(ApiRequest request, Entity<?> entity, Class<E> returnType) {
+        try {
+            return getRequest(request).put(entity, returnType);
+        } catch (WebApplicationException e) {
+            ErrorResponse errorResponse = ErrorResponseParser.parseErrorFromResponse(e.getResponse());
+            throw new ApiException(errorResponse, e);
         }
     }
 
@@ -85,6 +137,21 @@ public class AbstractApiClient {
         Invocation.Builder builder = buildWebTarget(request).request();
         builder.property(HttpHeaders.AUTHORIZATION, credential.getApiKey());
         return builder;
+    }
+
+    protected MultiPart buildMultiPartFileRequest(AbstractApiRequestWithFile request) {
+        File file = request.getFile();
+        InputStream inputStream = request.getInputStream();
+
+        BodyPart bodyPart;
+
+        if (file != null) {
+            bodyPart = new FileDataBodyPart(MULTIPART_FILENAME_PARAM_NAME, file, MediaType.TEXT_PLAIN_TYPE);
+        } else {
+            bodyPart = new StreamDataBodyPart(MULTIPART_FILENAME_PARAM_NAME, inputStream, request.getFilename());
+        }
+
+        return new FormDataMultiPart().bodyPart(bodyPart);
     }
 
     protected WebTarget buildWebTarget(ApiRequest request) {

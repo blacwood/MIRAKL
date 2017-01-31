@@ -1,5 +1,7 @@
 package com.bigname.core.restful.client.request;
 
+import com.bigname.core.restful.client.util.Preconditions;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,6 +18,14 @@ abstract public class AbstractApiRequest implements ApiRequest {
     @Override
     public Map<String, String> getQueryParams() {
         return new HashMap<>();
+    }
+
+    protected void checkExpression(boolean expression, String errorMessage){
+        Preconditions.checkRequestExpression(expression,errorMessage);
+    }
+
+    protected void checkRequiredArgument(Object argument, String argumentName){
+        Preconditions.checkRequiredRequestArgument(argument,argumentName);
     }
 
     @Override
