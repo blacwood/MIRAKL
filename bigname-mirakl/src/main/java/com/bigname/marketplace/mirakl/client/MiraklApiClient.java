@@ -1,8 +1,10 @@
 package com.bigname.marketplace.mirakl.client;
 
 import com.bigname.core.restful.client.security.Credential;
+import com.bigname.marketplace.mirakl.client.domain.MiraklHierarchy;
 import com.bigname.marketplace.mirakl.client.domain.MiraklShops;
 import com.bigname.marketplace.mirakl.client.domain.MiraklVersion;
+import com.bigname.marketplace.mirakl.client.request.GetHierarchyRequest;
 import com.bigname.marketplace.mirakl.client.request.GetShopsRequest;
 import com.bigname.marketplace.mirakl.client.request.GetVersionRequest;
 
@@ -24,5 +26,10 @@ public class MiraklApiClient extends AbstractMiraklApiClient implements MiraklAp
     @Override
     public MiraklShops getShops(GetShopsRequest request) {
         return get(request, MiraklShops.class);
+    }
+
+    @Override
+    public MiraklHierarchy getHierarchy(GetHierarchyRequest request) {
+        return get(request, MiraklHierarchy.class);
     }
 }

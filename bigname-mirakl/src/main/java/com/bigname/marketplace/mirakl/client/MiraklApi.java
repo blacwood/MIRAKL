@@ -1,7 +1,9 @@
 package com.bigname.marketplace.mirakl.client;
 
+import com.bigname.marketplace.mirakl.client.domain.MiraklHierarchy;
 import com.bigname.marketplace.mirakl.client.domain.MiraklShops;
 import com.bigname.marketplace.mirakl.client.domain.MiraklVersion;
+import com.bigname.marketplace.mirakl.client.request.GetHierarchyRequest;
 import com.bigname.marketplace.mirakl.client.request.GetShopsRequest;
 
 /**
@@ -11,4 +13,6 @@ public interface MiraklApi {
     MiraklVersion getVersion();
 
     MiraklShops getShops(GetShopsRequest request);
+
+    MiraklHierarchy getHierarchy(GetHierarchyRequest request);
 }

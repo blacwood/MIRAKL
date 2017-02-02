@@ -3,9 +3,8 @@ package com.bigname;
 import com.bigname.core.restful.client.security.Credential;
 import com.bigname.marketplace.mirakl.client.MiraklApi;
 import com.bigname.marketplace.mirakl.client.MiraklApiClient;
-import com.bigname.marketplace.mirakl.client.domain.MiraklShop;
-import com.bigname.marketplace.mirakl.client.domain.MiraklShops;
-import com.bigname.marketplace.mirakl.client.domain.MiraklVersion;
+import com.bigname.marketplace.mirakl.client.domain.*;
+import com.bigname.marketplace.mirakl.client.request.GetHierarchyRequest;
 import com.bigname.marketplace.mirakl.client.request.GetShopsRequest;
 
 /**
@@ -26,6 +25,13 @@ public class MiraklApiTest {
         System.out.println(shops.getTotalCount());
         for (MiraklShop miraklShop : shops.getShops()) {
             System.out.println(miraklShop.getId() + "," + miraklShop.getName() + "," + miraklShop.getDateCreated());
+        }
+
+        MiraklHierarchy hierarchy = client.getHierarchy(new GetHierarchyRequest());
+        System.out.println(hierarchy.getNodes().size());
+
+        for (HierarchyNode hierarchyNode : hierarchy.getNodes()) {
+            System.out.println(hierarchyNode.getCode() + "," + hierarchyNode.getLabel() + "," + hierarchyNode.getLevel() + "," + hierarchyNode.getParentCode());
         }
 
     }
