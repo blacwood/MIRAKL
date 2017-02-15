@@ -35,7 +35,7 @@ public class FTPDownload {
             FTPFile[] files = ftpClient.listFiles(remoteFileLocation, new FTPFileFilter() {
 
                 public boolean accept(FTPFile ftpFile) {
-                    return ftpFile.getName().endsWith(".txt");
+                    return ftpFile.getName().endsWith(".csv");
                 }
             });
             for(FTPFile file : files) {

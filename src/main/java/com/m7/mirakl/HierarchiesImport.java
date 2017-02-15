@@ -21,14 +21,15 @@ public class HierarchiesImport {
 
     public static void main(String[] args) throws Exception {
 
-        File file = new File("C:\\DevStudio\\Projects\\Envelopes\\Docs\\catalog-category.csv");
+//        File file = new File("C:\\DevStudio\\Projects\\Envelopes\\Docs\\catalog-category.csv");
+        File file = new File("C:\\tmp\\hierarchy-feed1487017699294.csv");
 
         CloseableHttpClient httpclient = HttpClients.createDefault();
         HttpPost request = new HttpPost(URL_STRING);
         request.addHeader("Authorization", FRONT_API_KEY);
 
         MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-        builder.addBinaryBody("file", file, ContentType.APPLICATION_OCTET_STREAM, "catalog-category.csv");
+        builder.addBinaryBody("file", file, ContentType.APPLICATION_OCTET_STREAM, "hierarchy-feed1487017699294.csv");
 
         HttpEntity multipart = builder.build();
 
